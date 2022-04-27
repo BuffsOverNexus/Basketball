@@ -1,0 +1,35 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:postgresql://ec2-54-91-188-254.compute-1.amazonaws.com/dl2tlk5l9ta11</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.username">fkizlbmxigtora</property>
+        <property name="connection.password">62eb1f08a3b0a148d6113469082956a1e4dcace7e3113214122ac793735cdb35</property>
+        <property name="dialect">org.hibernate.dialect.PostgreSQL82Dialect</property>
+
+<!--        <property name="connection.url">jdbc:mysql://localhost/basketball</property>-->
+<!--        <property name="connection.driver_class">org.mysql.jdbc.Driver</property>-->
+<!--        <property name="connection.username">basketball</property>-->
+<!--        <property name="connection.password">Usl!!F@Lmma6.]).</property>-->
+<!--        <property name="dialect">org.hibernate.dialect.MySQLDialect</property> &lt;!&ndash; DB Dialect &ndash;&gt;-->
+        <property name="hibernate.hbm2ddl.auto">update</property> <!-- create / create-drop / update / validate -->
+        <property name="hibernate.connection.autocommit">true</property>
+
+        <property name="show_sql">false</property> <!-- Show SQL in console -->
+        <property name="format_sql">false</property> <!-- Show SQL formatted -->
+
+        <!-- List of Classes -->
+        <mapping class="com.buffsovernexus.entity.Account"></mapping>
+        <mapping class="com.buffsovernexus.entity.Scenario"></mapping>
+        <mapping class="com.buffsovernexus.entity.PostSeason"></mapping>
+        <mapping class="com.buffsovernexus.entity.Season"></mapping>
+        <mapping class="com.buffsovernexus.entity.Game"></mapping>
+        <mapping class="com.buffsovernexus.entity.Team"></mapping>
+        <mapping class="com.buffsovernexus.entity.Player"></mapping>
+        <mapping class="com.buffsovernexus.entity.Performance"></mapping>
+        <mapping class="com.buffsovernexus.entity.EngineException"></mapping>
+
+    </session-factory>
+</hibernate-configuration>
