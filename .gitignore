@@ -1,0 +1,8 @@
+# intellij
+/.idea
+
+# target
+/target
+
+# hibernate configuration
+/src/main/resources/hibernate.cfg.xml
