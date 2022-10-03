@@ -54,7 +54,7 @@ public class SeasonMenu {
                         String home = nextGame.getHome().getName();
                         String away = nextGame.getAway().getName();
                         System.out.println();
-                        System.out.println(String.format("-- %s vs %s --", home, away));
+                        System.out.println( String.format("-- %s vs %s --", home, away) );
                     } else {
                         System.out.println("You have no pending games left to play. Try continuing to post season or viewing standings");
                     }
