@@ -7,17 +7,17 @@ import com.buffsovernexus.entity.Team;
 import lombok.Builder;
 import lombok.Data;
 
-/***
- * When a Player successfully steals the ball from another Player.
- */
 @Data
 @Builder
-public class PlayerStealEvent {
+/**
+ * When a defensive rebound occurs
+ */
+public class PlayerReboundTurnoverEvent {
 
     private Game game;
-    private Player thief;
-    private Player stolenFrom;
+    private Player winner;
+    private Player loser;
     private Possession possession;
-    private Team thiefTeam;
-    private Team stolenFromTeam;
+    private Team winningTeam;
+    private Team losingTeam;
 }

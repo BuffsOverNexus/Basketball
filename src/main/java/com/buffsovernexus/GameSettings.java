@@ -9,12 +9,6 @@ public class GameSettings {
     // Engine Settings
     public final static int GAME_POINTS_THRESHOLD = 20;
 
-    // Engine Weights
-    public final static int FOUR_POINTER_WEIGHT = 60;
-    public final static int GUARD_BLOCK_WEIGHT = 30;
-    public final static int TWO_POINTER_WEIGHT = 70;
-
-
     // Guard Weights
     public final static int GUARD_FOUR_POINTER_MAXIMUM = 90;
     public final static int GUARD_TWO_POINTER_MAXIMUM = 80;

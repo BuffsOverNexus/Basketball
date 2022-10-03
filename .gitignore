@@ -6,3 +6,7 @@
 
 # hibernate configuration
 /src/main/resources/hibernate.cfg.xml
+
+hibernate.cfg.xml
+
+runConfigurations.xml

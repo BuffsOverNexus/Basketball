@@ -42,9 +42,8 @@ public class SeasonMenu {
                     break;
                 case 'g':
                     Game game = nextGame(session);
-                    Engine engine = Engine.builder().game(game).logging(false).build();
+                    Engine engine = Engine.builder().session(session).game(game).build();
                     engine.generateGame();
-                    session.update(game);
                     break;
                 case 'v':
                     break;

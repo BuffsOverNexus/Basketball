@@ -23,10 +23,12 @@ public class ConsoleLog {
     }
 
     public static void formatEvent(String format, Object ... args) {
-        format("[EVENT] " + format, args);
+        format("[%s] " + format, args);
     }
 
     public static void formatError(String format, Object ... args) {
         format("[ERROR] " + format, args);
     }
+
+    public static void emptyLine() { System.out.println(""); }
 }
