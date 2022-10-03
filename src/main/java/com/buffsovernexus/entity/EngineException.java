@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Data
 @Entity
@@ -19,4 +20,6 @@ public class EngineException {
     private Long id;
 
     private String message;
+
+    private Date occurred;
 }

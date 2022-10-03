@@ -4,7 +4,6 @@ import com.buffsovernexus.CurrentSession;
 import com.buffsovernexus.GameSettings;
 import com.buffsovernexus.database.Database;
 import com.buffsovernexus.entity.Game;
-import com.buffsovernexus.entity.Performance;
 import com.buffsovernexus.entity.Season;
 import com.buffsovernexus.entity.Team;
 import org.hibernate.Session;
@@ -39,24 +38,16 @@ public class SeasonGenerator {
                         Game game = new Game();
                         game.setHome(team);
                         game.setAway(against);
-                        // Create the Performances
-                        Performance homeGuardPerformance = new Performance();
-                        Performance awayGuardPerformance = new Performance();
-                        Performance homeForwardPerformance = new Performance();
-                        Performance awayForwardPerformance = new Performance();
-                        homeGuardPerformance.setGame(game);
-                        homeGuardPerformance.setPlayer(team.getGuard());
-                        awayGuardPerformance.setGame(game);
-                        awayGuardPerformance.setPlayer(against.getGuard());
-                        homeForwardPerformance.setGame(game);
-                        homeForwardPerformance.setPlayer(team.getForward());
-                        awayForwardPerformance.setGame(game);
-                        awayForwardPerformance.setPlayer(against.getForward());
-                        // Add performances to the game.
-                        game.setHomeGuardPerformance(homeGuardPerformance);
-                        game.setAwayGuardPerformance(awayGuardPerformance);
-                        game.setHomeForwardPerformance(homeForwardPerformance);
-                        game.setAwayForwardPerformance(awayForwardPerformance);
+//                        // Create the Performances
+//                        Performance homeGuardPerformance = new Performance();
+//                        Performance awayGuardPerformance = new Performance();
+//                        Performance homeForwardPerformance = new Performance();
+//                        Performance awayForwardPerformance = new Performance();
+//                        // Add performances to the game.
+//                        game.setHomeGuardPerformance(homeGuardPerformance);
+//                        game.setAwayGuardPerformance(awayGuardPerformance);
+//                        game.setHomeForwardPerformance(homeForwardPerformance);
+//                        game.setAwayForwardPerformance(awayForwardPerformance);
                         game.setSeason(season);
 
                         // Add game to the list

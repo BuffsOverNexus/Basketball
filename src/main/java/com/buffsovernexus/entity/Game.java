@@ -27,15 +27,6 @@ public class Game {
     private Integer awayScore;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Performance homeGuardPerformance;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Performance homeForwardPerformance;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Performance awayGuardPerformance;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Performance awayForwardPerformance;
-
-    @OneToOne(cascade = CascadeType.ALL)
     private Season season;
 
     @OneToOne(cascade = CascadeType.ALL)
