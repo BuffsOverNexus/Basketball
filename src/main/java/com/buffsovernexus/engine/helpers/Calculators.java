@@ -1,4 +1,4 @@
-package com.buffsovernexus.engine.utility;
+package com.buffsovernexus.engine.helpers;
 
 import com.buffsovernexus.GameWeights;
 import com.buffsovernexus.engine.helpers.Calculator;

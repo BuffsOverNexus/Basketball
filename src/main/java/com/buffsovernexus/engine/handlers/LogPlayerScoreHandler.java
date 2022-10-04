@@ -12,7 +12,6 @@ public class LogPlayerScoreHandler extends EngineEventHandler {
         try {
             Player scorer = event.getScorer();
             ConsoleLog.format("(%s, %s) %s scored %s points!", event.getScoringTeam().getName(), scorer.getPosition().toString(), scorer.getName(), event.getPlayerShotType().getPoints());
-            Thread.sleep(1000);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

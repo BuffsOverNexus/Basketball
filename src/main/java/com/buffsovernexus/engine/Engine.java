@@ -9,7 +9,7 @@ import com.buffsovernexus.engine.event.game.GameStartEvent;
 import com.buffsovernexus.engine.event.game.GamePossessionChangeEvent;
 import com.buffsovernexus.engine.event.player.*;
 import com.buffsovernexus.engine.handlers.*;
-import com.buffsovernexus.engine.utility.Calculators;
+import com.buffsovernexus.engine.helpers.Calculators;
 import com.buffsovernexus.entity.Game;
 import com.buffsovernexus.entity.Player;
 import com.buffsovernexus.entity.Team;
@@ -34,6 +34,7 @@ public class Engine {
 
     public void addEventHandlers() {
         eventHandlers = new ArrayList<>();
+        eventHandlers.add(new LogStartGameAlreadyStartedHandler());
         eventHandlers.add(new LogStartGameHandler());
         eventHandlers.add(new LogPlayerShotAttemptHandler());
         eventHandlers.add(new LogEndGameHandler());
@@ -43,6 +44,7 @@ public class Engine {
         eventHandlers.add(new LogGamePossessionHandler());
         eventHandlers.add(new LogReboundHandler());
         eventHandlers.add(new LogReboundTurnoverHandler());
+
     }
     public void generateGame() {
         addEventHandlers();
@@ -322,6 +324,8 @@ public class Engine {
                         .game(game)
                         .scorer(forward)
                         .defender(opposing)
+                        .scoringTeam(getOffense())
+                        .defendingTeam(getDefense())
                         .build();
                 eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
             } else {

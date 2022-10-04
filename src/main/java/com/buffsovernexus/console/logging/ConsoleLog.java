@@ -1,5 +1,7 @@
 package com.buffsovernexus.console.logging;
 
+import com.buffsovernexus.GameSettings;
+
 public class ConsoleLog {
 
     public static void inline(String message) {
@@ -19,7 +21,12 @@ public class ConsoleLog {
     }
 
     public static void format(String format, Object ... args) {
-        System.out.println( String.format(format, args) );
+        try {
+            System.out.println(String.format(format, args));
+            Thread.sleep(GameSettings.TOTAL_SECONDS_PER_MESSAGE * 1000);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void formatEvent(String format, Object ... args) {

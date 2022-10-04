@@ -9,8 +9,13 @@ public class LogPlayerPassHandler extends EngineEventHandler {
     @Override
     public void onPlayerPassEvent(PlayerPassEvent event) {
         try {
-            ConsoleLog.format("(%s) %s passed the ball to %s.", event.getPassingTeam().getName(), event.getPasser().getName(), event.getReceivingPlayer().getName());
-            Thread.sleep(1000);
+            ConsoleLog.format("(%s, %s) %s passed the ball to (%s, %s) %s.",
+                    event.getPassingTeam().getName(),
+                    event.getPasser().getPosition().toString(),
+                    event.getPasser().getName(),
+                    event.getPassingTeam().getName(),
+                    event.getReceivingPlayer().getPosition().toString(),
+                    event.getReceivingPlayer().getName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

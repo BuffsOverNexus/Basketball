@@ -12,8 +12,7 @@ public class LogPlayerShotAttemptHandler extends EngineEventHandler {
     @Override
     public void onPlayerShotEvent(PlayerShotEvent event) {
         try {
-            ConsoleLog.format("(%s, %s) %s is attempting a shot a %s", event.getShootingTeam().getName(), event.getShooter().getPosition().toString(), event.getShooter().getName(), event.getPlayerShotType().toString());
-            Thread.sleep(1000);
+            ConsoleLog.format("(%s, %s) %s is attempting a %s", event.getShootingTeam().getName(), event.getShooter().getPosition().toString(), event.getShooter().getName(), event.getPlayerShotType().toString());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

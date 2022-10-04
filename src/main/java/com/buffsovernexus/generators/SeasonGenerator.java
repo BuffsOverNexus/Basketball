@@ -5,6 +5,7 @@ import com.buffsovernexus.GameSettings;
 import com.buffsovernexus.database.Database;
 import com.buffsovernexus.entity.Game;
 import com.buffsovernexus.entity.Season;
+import com.buffsovernexus.entity.SeasonTeam;
 import com.buffsovernexus.entity.Team;
 import org.hibernate.Session;
 

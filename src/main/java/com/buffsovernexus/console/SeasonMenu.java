@@ -5,9 +5,15 @@ import com.buffsovernexus.Runner;
 import com.buffsovernexus.database.Database;
 import com.buffsovernexus.engine.Engine;
 import com.buffsovernexus.entity.Game;
+import com.buffsovernexus.entity.SeasonTeam;
+import com.buffsovernexus.entity.Team;
 import com.buffsovernexus.generators.SeasonGenerator;
+import com.buffsovernexus.generators.SeasonTeamGenerator;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SeasonMenu {
@@ -21,6 +27,9 @@ public class SeasonMenu {
 
         // Verify the integrity of the games of the season.
         verifyGamesGenerated();
+
+        // Verify if all teams have a generated assocation for standings purposes.
+        verifyIfStandingsGenerated();
 
         while (!closeMenu) {
             System.out.println("Please choose an option: ");
@@ -60,6 +69,7 @@ public class SeasonMenu {
                     System.out.println();
                     break;
                 case 's':
+                    getStandings(session);
                     break;
                 case 'c':
                     if (!verifyAllGamesPlayed()) {
@@ -115,8 +125,19 @@ public class SeasonMenu {
         return true;
     }
 
+    private void verifyIfStandingsGenerated() {
+        Session session = Database.sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<SeasonTeam> seasonTeams = session.createQuery(String.format("FROM SeasonTeam WHERE season_id='%s' AND scenario_id='%s'", CurrentSession.season_id, CurrentSession.scenario_id), SeasonTeam.class).list();
+        if (seasonTeams.isEmpty()) {
+            SeasonTeamGenerator.generateSeasonTeams();
+        }
+        transaction.commit();
+        session.close();
+    }
+
     private Game nextGame(Session session) {
-        List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s'", CurrentSession.season_id), Game.class ).list();
+        List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s' ORDER BY id ASC", CurrentSession.season_id), Game.class ).list();
 
         for (Game game : seasonGames) {
             if (!game.hasWinner()) {
@@ -124,6 +145,15 @@ public class SeasonMenu {
             }
         }
         return null;
+    }
+
+    private void getStandings(Session session) {
+        List<SeasonTeam> seasonTeams = session.createQuery( String.format("FROM SeasonTeam WHERE season_id = '%s'", CurrentSession.season_id), SeasonTeam.class).list();
+        System.out.println("-- STANDINGS --");
+        seasonTeams.forEach(seasonTeam -> {
+             System.out.println(String.format("%s | %s - %s", seasonTeam.getTeam().getName(), seasonTeam.getWins(), seasonTeam.getLosses() ));
+        });
+        System.out.println("---------------");
     }
 
 

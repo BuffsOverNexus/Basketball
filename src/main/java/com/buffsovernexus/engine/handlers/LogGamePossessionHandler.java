@@ -13,11 +13,10 @@ public class LogGamePossessionHandler extends EngineEventHandler {
             Game game = event.getGame();
 
             ConsoleLog.emptyLine();
-            ConsoleLog.format("< [%s] %s - %s [%s] >", game.getHome().getName(), game.getHomeScore(), game.getAway().getName(), game.getAwayScore());
+            ConsoleLog.format("< [%s] %s - %s [%s] >", game.getHome().getName(), game.getHomeScore(), game.getAwayScore(), game.getAway().getName());
             ConsoleLog.emptyLine();
-            ConsoleLog.format(">> [ %s has the ball ] << ", event.getOffense().getName());
+            ConsoleLog.format(">> [ %s have the ball ] << ", event.getOffense().getName());
             ConsoleLog.emptyLine();
-            Thread.sleep(3000);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

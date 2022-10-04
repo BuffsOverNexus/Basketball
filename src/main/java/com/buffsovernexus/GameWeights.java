@@ -7,7 +7,7 @@ public class GameWeights {
 
     public final static int GUARD_FOUR_POINTER_ATTEMPT_WEIGHT = 70;
     public final static int FORWARD_FOUR_POINTER_ATTEMPT_WEIGHT = 40;
-    public final static int SHOOTING_OVER_PASSING_WEIGHT = 40;
+    public final static int SHOOTING_OVER_PASSING_WEIGHT = 50;
 
     // Guard - Four Pointer
     public final static int GUARD_FOUR_POINTER_WEIGHT = 60;

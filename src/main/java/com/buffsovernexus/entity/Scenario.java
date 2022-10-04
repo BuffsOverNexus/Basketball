@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Scenario {
 
     @Id
-    @GeneratedValue(generator="increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator="increment")
     @GenericGenerator(name="increment", strategy = "increment")
     private Long id;
 
