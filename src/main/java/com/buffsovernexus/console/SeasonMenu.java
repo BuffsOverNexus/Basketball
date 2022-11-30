@@ -5,9 +5,16 @@ import com.buffsovernexus.Runner;
 import com.buffsovernexus.database.Database;
 import com.buffsovernexus.engine.Engine;
 import com.buffsovernexus.entity.Game;
+import com.buffsovernexus.entity.SeasonTeam;
+import com.buffsovernexus.entity.Team;
 import com.buffsovernexus.generators.SeasonGenerator;
+import com.buffsovernexus.generators.SeasonTeamGenerator;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SeasonMenu {
@@ -22,6 +29,9 @@ public class SeasonMenu {
         // Verify the integrity of the games of the season.
         verifyGamesGenerated();
 
+        // Verify if all teams have a generated assocation for standings purposes.
+        verifyIfStandingsGenerated();
+
         while (!closeMenu) {
             System.out.println("Please choose an option: ");
             System.out.println("(g) - Simulate next game.");
@@ -35,18 +45,19 @@ public class SeasonMenu {
             System.out.print("Selection: ");
             char option = Runner.in.next().trim().toLowerCase().toCharArray()[0];
             Session session = Database.sessionFactory.openSession();
+            Game game = nextGame(session);
+            Engine engine = Engine.builder().session(session).game(game).logging(true).build();
             switch (option) {
                 default:
                 case 'q':
                     closeMenu = true;
                     break;
                 case 'g':
-                    Game game = nextGame(session);
-                    Engine engine = Engine.builder().game(game).logging(false).build();
+                    engine.setLogging(false);
                     engine.generateGame();
-                    session.update(game);
                     break;
                 case 'v':
+                    engine.generateGame();
                     break;
                 case 'r':
                     Game nextGame = nextGame(session);
@@ -55,12 +66,16 @@ public class SeasonMenu {
                         String away = nextGame.getAway().getName();
                         System.out.println();
                         System.out.println( String.format("-- %s vs %s --", home, away) );
+                        System.out.println( String.format("Guards: %s vs %s", nextGame.getHome().getGuard().getName(), nextGame.getAway().getGuard().getName()) );
+                        System.out.println( String.format("Forwards: %s vs %s", nextGame.getHome().getForward().getName(), nextGame.getAway().getForward().getName()) );
+
                     } else {
                         System.out.println("You have no pending games left to play. Try continuing to post season or viewing standings");
                     }
                     System.out.println();
                     break;
                 case 's':
+                    getStandings(session);
                     break;
                 case 'c':
                     if (!verifyAllGamesPlayed()) {
@@ -68,6 +83,16 @@ public class SeasonMenu {
                     } else {
                         closeMenu = true;
                         new PostSeasonMenu();
+                    }
+                    break;
+                case 'a':
+                    List<Game> unFinishedGames = getUnfinishedGames(session);
+                    int totalGames = unFinishedGames.size();
+                    if (totalGames == 0)
+                        System.out.println("No games left to run.");
+                    for (int i = 0; i < totalGames; i++) {
+                        Engine.builder().session(session).game(unFinishedGames.get(i)).logging(false).build().generateGame();
+                        System.out.println(String.format("Finished %s of %s", i + 1, totalGames + 1));
                     }
                     break;
             }
@@ -116,8 +141,19 @@ public class SeasonMenu {
         return true;
     }
 
+    private void verifyIfStandingsGenerated() {
+        Session session = Database.sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<SeasonTeam> seasonTeams = session.createQuery(String.format("FROM SeasonTeam WHERE season_id='%s' AND scenario_id='%s'", CurrentSession.season_id, CurrentSession.scenario_id), SeasonTeam.class).list();
+        if (seasonTeams.isEmpty()) {
+            SeasonTeamGenerator.generateSeasonTeams();
+        }
+        transaction.commit();
+        session.close();
+    }
+
     private Game nextGame(Session session) {
-        List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s'", CurrentSession.season_id), Game.class ).list();
+        List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s' ORDER BY id ASC", CurrentSession.season_id), Game.class ).list();
 
         for (Game game : seasonGames) {
             if (!game.hasWinner()) {
@@ -125,6 +161,27 @@ public class SeasonMenu {
             }
         }
         return null;
+    }
+
+    private void getStandings(Session session) {
+        List<SeasonTeam> seasonTeams = session.createQuery( String.format("FROM SeasonTeam WHERE season_id = '%s'", CurrentSession.season_id), SeasonTeam.class).list();
+        System.out.println("-- STANDINGS --");
+        seasonTeams.forEach(seasonTeam -> {
+             System.out.println(String.format("%s | %s - %s", seasonTeam.getTeam().getName(), seasonTeam.getWins(), seasonTeam.getLosses() ));
+        });
+        System.out.println("---------------");
+    }
+
+    private List<Game> getUnfinishedGames(Session session) {
+        List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s' ORDER BY id ASC", CurrentSession.season_id), Game.class ).list();
+        List<Game> unplayedGames = new ArrayList<>();
+
+        for (Game game : seasonGames) {
+            if (!game.hasWinner()) {
+                unplayedGames.add(game);
+            }
+        }
+        return unplayedGames;
     }
 
 

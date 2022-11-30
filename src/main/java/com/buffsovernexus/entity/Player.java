@@ -24,5 +24,9 @@ public class Player {
     private Integer block;
     private Integer rebound;
 
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+
 
 }

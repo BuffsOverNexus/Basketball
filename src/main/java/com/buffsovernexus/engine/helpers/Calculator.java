@@ -18,6 +18,16 @@ public class Calculator {
 
     /**
      * Add a condition (check), how much it is worth (0 to 100), and what the expected result is.
+     * Note: This assumes you want the event to be a success.
+     * @param check - The value to check (e.g. the player's current four pointer)
+     * @param weight - The maximum weight to accept (0 to 100, e.g. the maximum four pointer)
+     * @throws InvalidCalculatorWeightException
+     */
+    public void add(int check, int weight) throws InvalidCalculatorWeightException {
+        add(Check.builder().stat(check).build(), weight, true);
+    }
+    /**
+     * Add a condition (check), how much it is worth (0 to 100), and what the expected result is.
      * @param check - The value to check (e.g. the player's current four pointer)
      * @param weight - The maximum weight to accept (0 to 100, e.g. the maximum four pointer)
      * @param reward - What the expected result is (if you intend to miss, use false, otherwise, if you want to score, use true)
@@ -51,7 +61,6 @@ public class Calculator {
             Random random = new Random();
             int result = random.nextInt(100);
             if (isValid()) {
-                System.out.println("Resulting Integer: " + result);
                 int acceptedWeight = 0;
                 for (Entry<Check, WeightedReward> condition : conditions.entrySet()) {
                     boolean conditionResult = condition.getKey().result();

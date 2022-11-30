@@ -2,9 +2,9 @@ package com.buffsovernexus.engine;
 
 
 import com.buffsovernexus.engine.event.game.GameEndEvent;
+import com.buffsovernexus.engine.event.game.GameLeadChangeEvent;
 import com.buffsovernexus.engine.event.game.GameStartEvent;
-import com.buffsovernexus.engine.event.game.LeadChangeEvent;
-import com.buffsovernexus.engine.event.game.PossessionChangeEvent;
+import com.buffsovernexus.engine.event.game.GamePossessionChangeEvent;
 import com.buffsovernexus.engine.event.player.*;
 
 /**
@@ -21,6 +21,14 @@ public abstract class EngineEventHandler implements EngineListener {
     public void onPlayerStealEvent(PlayerStealEvent event) { }
     @Override
     public void onPlayerBlockEvent(PlayerBlockEvent event) { }
+    @Override
+    public void onPlayerShotMissedEvent(PlayerShotMissedEvent event) { }
+    @Override
+    public void onPlayerPassEvent(PlayerPassEvent event) { }
+    @Override
+    public void onPlayerReboundEvent(PlayerReboundEvent event) {}
+    @Override
+    public void onPlayerReboundTurnoverEvent(PlayerReboundTurnoverEvent event) { }
 
     // Game Events
     @Override
@@ -28,7 +36,7 @@ public abstract class EngineEventHandler implements EngineListener {
     @Override
     public void onGameEndEvent(GameEndEvent event) { }
     @Override
-    public void onPossessionChangeEvent(PossessionChangeEvent event) { }
+    public void onGamePossessionChangeEvent(GamePossessionChangeEvent event) { }
     @Override
-    public void onLeadChangeEvent(LeadChangeEvent event) { }
+    public void onGameLeadChangeEvent(GameLeadChangeEvent event) { }
 }

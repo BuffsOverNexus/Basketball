@@ -1,15 +1,14 @@
 package com.buffsovernexus.engine.enums;
 
 public enum PlayerShotType {
-    MISSED (0),
-    SCORED (1),
-    OUT_OF_BOUNDS (2);
+    FOUR_POINTER (4),
+    TWO_POINTER (2);
 
-    private int id;
-    PlayerShotType(int id) {
-        this.id = id;
+    private int points;
+    PlayerShotType(int points) {
+        this.points = points;
     }
-    int getId() {
-        return id;
+    public int getPoints() {
+        return points;
     }
 }

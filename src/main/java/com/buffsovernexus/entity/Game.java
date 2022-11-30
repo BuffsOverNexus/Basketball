@@ -1,5 +1,6 @@
 package com.buffsovernexus.entity;
 
+import com.buffsovernexus.GameSettings;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,8 +24,8 @@ public class Game {
     @OneToOne(cascade = CascadeType.ALL)
     private Team loser = null;
 
-    private Integer homeScore;
-    private Integer awayScore;
+    private Integer homeScore = 0;
+    private Integer awayScore = 0;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Season season;
@@ -33,7 +34,9 @@ public class Game {
     private PostSeason postSeason;
 
     public boolean hasWinner() {
-        return winner != null;
+        if (awayScore >= GameSettings.GAME_POINTS_THRESHOLD) return true;
+        if (homeScore >= GameSettings.GAME_POINTS_THRESHOLD) return true;
+        return false;
     }
 
     public boolean isSeason() {
@@ -48,19 +51,7 @@ public class Game {
         return team.equals(home) ? homeScore : awayScore;
     }
 
-    public int getWinnerScore() {
-        if (hasWinner()) {
-            return getScore(winner);
-        } else {
-            return 0;
-        }
-    }
+    public void addHomeScore(int points) { this.homeScore += points; }
+    public void addAwayScore(int points) { this.awayScore += points; }
 
-    public int getLoserScore() {
-        if (hasWinner()) {
-            return getScore(loser);
-        } else {
-            return 0;
-        }
-    }
 }

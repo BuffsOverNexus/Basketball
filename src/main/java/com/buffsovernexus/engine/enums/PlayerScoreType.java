@@ -1,7 +1,6 @@
 package com.buffsovernexus.engine.enums;
 
 public enum PlayerScoreType {
-    MISSED (0),
     FOUR_POINTER (4),
     TWO_POINTER (2);
 

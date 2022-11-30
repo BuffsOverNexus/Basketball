@@ -6,14 +6,15 @@ import com.buffsovernexus.entity.Team;
 import lombok.Builder;
 import lombok.Data;
 
-/***
- * When the Game starts.
- *
- */
 @Data
 @Builder
-public class GameStartEvent {
+/**
+ * Handles when the possession changes.
+ * NOTE: This is when the possession is successful changed. Not before.
+ */
+public class GamePossessionChangeEvent {
+
+    private Possession possession;
     private Game game;
-    private Possession startingPossession;
-    private Team teamWithPossession;
+    private Team offense, defense;
 }

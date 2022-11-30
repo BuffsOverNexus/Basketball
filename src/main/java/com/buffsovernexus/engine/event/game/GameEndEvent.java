@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class GameEndEvent extends GameEvent {
+public class GameEndEvent {
 
     private Game game;
     private Team winner, loser;

@@ -7,17 +7,18 @@ import com.buffsovernexus.entity.Team;
 import lombok.Builder;
 import lombok.Data;
 
-/***
- * When a Player successfully steals the ball from another Player.
+/**
+ * When a player successfully passes
  */
-@Data
 @Builder
-public class PlayerStealEvent {
+@Data
+public class PlayerPassEvent {
 
     private Game game;
-    private Player thief;
-    private Player stolenFrom;
+    private Player passer;
+    private Player defender;
     private Possession possession;
-    private Team thiefTeam;
-    private Team stolenFromTeam;
+    private Team passingTeam;
+    private Team defendingTeam;
+    private Player receivingPlayer;
 }

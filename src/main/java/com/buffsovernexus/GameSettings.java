@@ -1,19 +1,18 @@
 package com.buffsovernexus;
 
+/**
+ * All games settings that are easy to manipulate depending on what you would like to favor
+ */
 public class GameSettings {
 
     // Game Settings
     public final static int TOTAL_TEAMS = 8; // Total number of teams. Generally do not want to change this...
     public final static int TOTAL_GAMES_AGAINST = 2; // This is how many times teams have to play each other (multiples of 2)
 
+    public static final int TOTAL_SECONDS_PER_MESSAGE = 2; // This is how long you have to wait per message. Reduce this if you read fast I guess?
+
     // Engine Settings
     public final static int GAME_POINTS_THRESHOLD = 20;
-
-    // Engine Weights
-    public final static int FOUR_POINTER_WEIGHT = 60;
-    public final static int GUARD_BLOCK_WEIGHT = 30;
-    public final static int TWO_POINTER_WEIGHT = 70;
-
 
     // Guard Weights
     public final static int GUARD_FOUR_POINTER_MAXIMUM = 90;

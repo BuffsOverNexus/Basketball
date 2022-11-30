@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -11,7 +12,7 @@ import javax.persistence.*;
 public class Season {
 
     @Id
-    @GeneratedValue(generator="increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator="increment")
     @GenericGenerator(name="increment", strategy = "increment")
     private Long id;
 
