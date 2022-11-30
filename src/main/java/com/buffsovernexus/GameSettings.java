@@ -9,7 +9,7 @@ public class GameSettings {
     public final static int TOTAL_TEAMS = 8; // Total number of teams. Generally do not want to change this...
     public final static int TOTAL_GAMES_AGAINST = 2; // This is how many times teams have to play each other (multiples of 2)
 
-    public static final int TOTAL_SECONDS_PER_MESSAGE = 3; // This is how long you have to wait per message. Reduce this if you read fast I guess?
+    public static final int TOTAL_SECONDS_PER_MESSAGE = 2; // This is how long you have to wait per message. Reduce this if you read fast I guess?
 
     // Engine Settings
     public final static int GAME_POINTS_THRESHOLD = 20;

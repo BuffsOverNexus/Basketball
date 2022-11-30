@@ -19,6 +19,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -29,11 +30,13 @@ public class Engine {
     private Possession possession = Possession.HOME;
     private List<EngineListener> eventHandlers;
     private boolean hasWinner = false;
+    private boolean logging = true;
 
     private Session session;
 
+    private Date start, end;
+
     public void addEventHandlers() {
-        eventHandlers = new ArrayList<>();
         eventHandlers.add(new LogStartGameAlreadyStartedHandler());
         eventHandlers.add(new LogStartGameHandler());
         eventHandlers.add(new LogPlayerShotAttemptHandler());
@@ -44,12 +47,20 @@ public class Engine {
         eventHandlers.add(new LogGamePossessionHandler());
         eventHandlers.add(new LogReboundHandler());
         eventHandlers.add(new LogReboundTurnoverHandler());
+    }
 
+    public void addEssentialHandlers() {
+        eventHandlers.add(new EndGameRecordTeamsHandler());
     }
     public void generateGame() {
-        addEventHandlers();
+        eventHandlers = new ArrayList<>();
 
-        possession = Possession.AWAY;
+        addEssentialHandlers();
+        if (logging)
+            addEventHandlers();
+
+        possession = Possession.HOME;
+
         // Declare start of the game
         startGame();
 
@@ -84,17 +95,17 @@ public class Engine {
             game.setLoser(game.getHome());
         } else {
             game.setWinner(game.getHome());
-            game.setLoser(game.getLoser());
+            game.setLoser(game.getAway());
         }
         session.update(game);
         transaction.commit();
 
         // We are guaranteed to have a winner.
         if (game.getHomeScore() > game.getAwayScore()) {
-            GameEndEvent gameEndEvent = GameEndEvent.builder().game(game).winner(game.getWinner()).loser(game.getLoser()).winningScore(game.getHomeScore()).losingScore(game.getAwayScore()).build();
+            GameEndEvent gameEndEvent = GameEndEvent.builder().game(game).winner(game.getHome()).loser(game.getAway()).winningScore(game.getHomeScore()).losingScore(game.getAwayScore()).build();
             eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameEndEvent(gameEndEvent));
         } else {
-            GameEndEvent gameEndEvent = GameEndEvent.builder().game(game).winner(game.getWinner()).loser(game.getLoser()).winningScore(game.getAwayScore()).losingScore(game.getHomeScore()).build();
+            GameEndEvent gameEndEvent = GameEndEvent.builder().game(game).winner(game.getAway()).loser(game.getAway()).winningScore(game.getAwayScore()).losingScore(game.getHomeScore()).build();
             eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameEndEvent(gameEndEvent));
         }
     }
@@ -529,8 +540,6 @@ public class Engine {
         if (game.getHomeScore() >= GameSettings.GAME_POINTS_THRESHOLD) return true;
         return false;
     }
-
-
 
 
 }

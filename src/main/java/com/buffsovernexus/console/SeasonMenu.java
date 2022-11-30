@@ -13,6 +13,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,17 +45,19 @@ public class SeasonMenu {
             System.out.print("Selection: ");
             char option = Runner.in.next().trim().toLowerCase().toCharArray()[0];
             Session session = Database.sessionFactory.openSession();
+            Game game = nextGame(session);
+            Engine engine = Engine.builder().session(session).game(game).logging(true).build();
             switch (option) {
                 default:
                 case 'q':
                     closeMenu = true;
                     break;
                 case 'g':
-                    Game game = nextGame(session);
-                    Engine engine = Engine.builder().session(session).game(game).build();
+                    engine.setLogging(false);
                     engine.generateGame();
                     break;
                 case 'v':
+                    engine.generateGame();
                     break;
                 case 'r':
                     Game nextGame = nextGame(session);
@@ -63,6 +66,9 @@ public class SeasonMenu {
                         String away = nextGame.getAway().getName();
                         System.out.println();
                         System.out.println( String.format("-- %s vs %s --", home, away) );
+                        System.out.println( String.format("Guards: %s vs %s", nextGame.getHome().getGuard().getName(), nextGame.getAway().getGuard().getName()) );
+                        System.out.println( String.format("Forwards: %s vs %s", nextGame.getHome().getForward().getName(), nextGame.getAway().getForward().getName()) );
+
                     } else {
                         System.out.println("You have no pending games left to play. Try continuing to post season or viewing standings");
                     }
@@ -77,6 +83,16 @@ public class SeasonMenu {
                     } else {
                         closeMenu = true;
                         new PostSeasonMenu();
+                    }
+                    break;
+                case 'a':
+                    List<Game> unFinishedGames = getUnfinishedGames(session);
+                    int totalGames = unFinishedGames.size();
+                    if (totalGames == 0)
+                        System.out.println("No games left to run.");
+                    for (int i = 0; i < totalGames; i++) {
+                        Engine.builder().session(session).game(unFinishedGames.get(i)).logging(false).build().generateGame();
+                        System.out.println(String.format("Finished %s of %s", i + 1, totalGames + 1));
                     }
                     break;
             }
@@ -154,6 +170,18 @@ public class SeasonMenu {
              System.out.println(String.format("%s | %s - %s", seasonTeam.getTeam().getName(), seasonTeam.getWins(), seasonTeam.getLosses() ));
         });
         System.out.println("---------------");
+    }
+
+    private List<Game> getUnfinishedGames(Session session) {
+        List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s' ORDER BY id ASC", CurrentSession.season_id), Game.class ).list();
+        List<Game> unplayedGames = new ArrayList<>();
+
+        for (Game game : seasonGames) {
+            if (!game.hasWinner()) {
+                unplayedGames.add(game);
+            }
+        }
+        return unplayedGames;
     }
 
 

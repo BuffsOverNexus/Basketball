@@ -8,7 +8,7 @@ import com.buffsovernexus.entity.SeasonTeam;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-public class LogEndGameRecordTeamsHandler extends EngineEventHandler {
+public class EndGameRecordTeamsHandler extends EngineEventHandler {
 
     @Override
     public void onGameEndEvent(GameEndEvent event) {
@@ -16,10 +16,10 @@ public class LogEndGameRecordTeamsHandler extends EngineEventHandler {
             Session session = Database.sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
             SeasonTeam winningTeam = session.createQuery(
-                    String.format("FROM season_team WHERE scenario_id = '%s' and season_id='%s' and team_id = '%s'", CurrentSession.scenario_id, CurrentSession.season_id, event.getWinner().getId()),
+                    String.format("FROM SeasonTeam WHERE scenario_id = '%s' and season_id='%s' and team_id = '%s'", CurrentSession.scenario_id, CurrentSession.season_id, event.getWinner().getId()),
                     SeasonTeam.class).uniqueResult();
             SeasonTeam losingTeam = session.createQuery(
-                    String.format("FROM season_team WHERE scenario_id = '%s' and season_id='%s' and team_id = '%s'", CurrentSession.scenario_id, CurrentSession.season_id, event.getLoser().getId()),
+                    String.format("FROM SeasonTeam WHERE scenario_id = '%s' and season_id='%s' and team_id = '%s'", CurrentSession.scenario_id, CurrentSession.season_id, event.getLoser().getId()),
                     SeasonTeam.class).uniqueResult();
 
             winningTeam.setWins(winningTeam.getWins() + 1);

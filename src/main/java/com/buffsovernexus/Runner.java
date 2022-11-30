@@ -11,9 +11,16 @@ public class Runner {
 
     public static void main(String[] args) {
         try {
+            // Grab the first argument
+            if (args.length == 0) {
+                System.out.println("Please add an 'env' variable");
+                return;
+            }
+
+            String environment = args[0];
             in = new Scanner(System.in);
             // Setup Hibernate
-            Database.setUp();
+            Database.setUp(environment);
 
             // Start the welcome message.
             new WelcomeMenu();

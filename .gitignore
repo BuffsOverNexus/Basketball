@@ -10,3 +10,4 @@
 hibernate.cfg.xml
 
 runConfigurations.xml
+/src/main/resources/hibernate_dev.cfg.xml
