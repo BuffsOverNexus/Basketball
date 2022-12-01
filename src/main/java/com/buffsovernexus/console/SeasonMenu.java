@@ -6,22 +6,19 @@ import com.buffsovernexus.database.Database;
 import com.buffsovernexus.engine.Engine;
 import com.buffsovernexus.entity.Game;
 import com.buffsovernexus.entity.SeasonTeam;
-import com.buffsovernexus.entity.Team;
 import com.buffsovernexus.generators.SeasonGenerator;
 import com.buffsovernexus.generators.SeasonTeamGenerator;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.io.Console;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class SeasonMenu {
 
-    private boolean closeMenu = false;
-
     public SeasonMenu() {
+        boolean closeMenu = false;
         System.out.println();
         System.out.println();
         System.out.println(">>> SEASON MENU");
@@ -65,9 +62,9 @@ public class SeasonMenu {
                         String home = nextGame.getHome().getName();
                         String away = nextGame.getAway().getName();
                         System.out.println();
-                        System.out.println( String.format("-- %s vs %s --", home, away) );
-                        System.out.println( String.format("Guards: %s vs %s", nextGame.getHome().getGuard().getName(), nextGame.getAway().getGuard().getName()) );
-                        System.out.println( String.format("Forwards: %s vs %s", nextGame.getHome().getForward().getName(), nextGame.getAway().getForward().getName()) );
+                        System.out.printf("-- %s vs %s --", home, away);
+                        System.out.printf("Guards: %s vs %s%n", nextGame.getHome().getGuard().getName(), nextGame.getAway().getGuard().getName());
+                        System.out.printf("Forwards: %s vs %s", nextGame.getHome().getForward().getName(), nextGame.getAway().getForward().getName());
 
                     } else {
                         System.out.println("You have no pending games left to play. Try continuing to post season or viewing standings");
@@ -92,7 +89,7 @@ public class SeasonMenu {
                         System.out.println("No games left to run.");
                     for (int i = 0; i < totalGames; i++) {
                         Engine.builder().session(session).game(unFinishedGames.get(i)).logging(false).build().generateGame();
-                        System.out.println(String.format("Finished %s of %s", i + 1, totalGames + 1));
+                        System.out.printf("Finished %s of %s", i + 1, totalGames + 1);
                     }
                     break;
             }
@@ -120,7 +117,7 @@ public class SeasonMenu {
 
     /***
      * Ensure that all games have been played and a winner has been awarded.
-     * @return
+     * @return true/false depending on if all games have been played in a season
      */
     private boolean verifyAllGamesPlayed() {
         Session session = Database.sessionFactory.openSession();
@@ -130,7 +127,7 @@ public class SeasonMenu {
         List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s'", CurrentSession.season_id), Game.class ).list();
 
         for (Game game : seasonGames) {
-            if (!game.hasWinner()) {
+            if (game.hasWinner()) {
                 session.getTransaction().commit();
                 session.close();
                 return false;
@@ -156,7 +153,7 @@ public class SeasonMenu {
         List<Game> seasonGames = session.createQuery( String.format("FROM Game WHERE season_id='%s' ORDER BY id ASC", CurrentSession.season_id), Game.class ).list();
 
         for (Game game : seasonGames) {
-            if (!game.hasWinner()) {
+            if (game.hasWinner()) {
                 return game;
             }
         }
@@ -166,9 +163,7 @@ public class SeasonMenu {
     private void getStandings(Session session) {
         List<SeasonTeam> seasonTeams = session.createQuery( String.format("FROM SeasonTeam WHERE season_id = '%s'", CurrentSession.season_id), SeasonTeam.class).list();
         System.out.println("-- STANDINGS --");
-        seasonTeams.forEach(seasonTeam -> {
-             System.out.println(String.format("%s | %s - %s", seasonTeam.getTeam().getName(), seasonTeam.getWins(), seasonTeam.getLosses() ));
-        });
+        seasonTeams.forEach(seasonTeam -> System.out.printf("%s | %s - %s", seasonTeam.getTeam().getName(), seasonTeam.getWins(), seasonTeam.getLosses() ));
         System.out.println("---------------");
     }
 
@@ -177,7 +172,7 @@ public class SeasonMenu {
         List<Game> unplayedGames = new ArrayList<>();
 
         for (Game game : seasonGames) {
-            if (!game.hasWinner()) {
+            if (game.hasWinner()) {
                 unplayedGames.add(game);
             }
         }

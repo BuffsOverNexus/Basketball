@@ -4,7 +4,7 @@ import com.buffsovernexus.enums.PlayerPosition;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity

@@ -4,7 +4,7 @@ import com.buffsovernexus.enums.ScenarioStatus;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity

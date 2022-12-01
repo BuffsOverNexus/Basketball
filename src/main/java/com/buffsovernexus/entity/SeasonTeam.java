@@ -3,7 +3,7 @@ package com.buffsovernexus.entity;
 import com.buffsovernexus.entity.identifier.SeasonTeamId;
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "season_team")
