@@ -28,14 +28,14 @@ public class ChooseScenario {
             // Retrieve all scenarios
             Session session = Database.sessionFactory.openSession();
             session.beginTransaction();
-            String query = String.format("FROM Scenario WHERE account_id = '%s'", CurrentSession.account_id);
+            String query = String.format("FROM Scenario WHERE account = '%s'", CurrentSession.accountId);
             List<Scenario> scenarios = session.createQuery(query, Scenario.class).list();
 
             if (scenarios.size() == 0) {
                 System.out.println("!NO SCENARIOS FOUND!");
             } else {
                 for (Scenario scenario : scenarios) {
-                    System.out.println(String.format("[%s - %s]", scenario.getId(), scenario.getName()));
+                    System.out.printf("[%s - %s]%n", scenario.getId(), scenario.getName());
                 }
             }
 
@@ -53,8 +53,8 @@ public class ChooseScenario {
                 selectScenarioSession.beginTransaction();
                 // Select the existing scenario
                 Scenario scenario = selectScenarioSession.get(Scenario.class, (long) id);
-                CurrentSession.scenario_id = scenario.getId();
-                System.out.println(String.format(" ** SELECTED SCENARIO -> %s ** ", scenario.getName()));
+                CurrentSession.scenarioId = scenario.getId();
+                System.out.printf(" ** SELECTED SCENARIO -> %s ** %n", scenario.getName());
 
                 selectScenarioSession.getTransaction().commit();
                 selectScenarioSession.close();

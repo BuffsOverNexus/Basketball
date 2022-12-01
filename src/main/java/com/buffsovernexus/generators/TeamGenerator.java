@@ -10,18 +10,18 @@ import org.hibernate.Session;
 
 public class TeamGenerator {
 
-    private String[] teamNames = new String[] {
+    private final String[] teamNames = new String[] {
             "Eagles", "Tigers", "Bulldogs", "Panthers", "Cougars", "Warriors", "Wildcats"
     };
 
     public static Team generateTeam(String name, boolean isUserTeam) {
-        Player guard = PlayerGenerator.generatePlayer(PlayerPosition.GUARD);
-        Player forward = PlayerGenerator.generatePlayer(PlayerPosition.FORWARD);
-
         Session session = Database.sessionFactory.openSession();
+        Player guard = PlayerGenerator.generatePlayer(session, PlayerPosition.GUARD);
+        Player forward = PlayerGenerator.generatePlayer(session, PlayerPosition.FORWARD);
+
         session.beginTransaction();
 
-        Scenario scenario = session.get(Scenario.class, CurrentSession.scenario_id);
+        Scenario scenario = session.get(Scenario.class, CurrentSession.scenarioId);
 
         Team team = new Team();
         team.setGuard(guard);
@@ -30,7 +30,7 @@ public class TeamGenerator {
         team.setScenario(scenario);
         team.setName(name);
 
-        session.save(team);
+        session.persist(team);
 
         session.getTransaction().commit();
         session.close();

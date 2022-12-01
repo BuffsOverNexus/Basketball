@@ -9,6 +9,7 @@ import com.buffsovernexus.engine.event.game.GameStartEvent;
 import com.buffsovernexus.engine.event.game.GamePossessionChangeEvent;
 import com.buffsovernexus.engine.event.player.*;
 import com.buffsovernexus.engine.handlers.*;
+import com.buffsovernexus.engine.handlers.essential.EndGameRecordTeamsHandler;
 import com.buffsovernexus.engine.helpers.Calculators;
 import com.buffsovernexus.entity.Game;
 import com.buffsovernexus.entity.Player;
@@ -33,8 +34,6 @@ public class Engine {
     private boolean logging;
 
     private Session session;
-
-    private Date start, end;
 
     public void addEventHandlers() {
         eventHandlers.add(new LogStartGameAlreadyStartedHandler());

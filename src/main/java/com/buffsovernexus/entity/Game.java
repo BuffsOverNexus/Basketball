@@ -1,6 +1,7 @@
 package com.buffsovernexus.entity;
 
 import com.buffsovernexus.GameSettings;
+import com.buffsovernexus.engine.enums.Possession;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,6 +33,10 @@ public class Game {
 
     @OneToOne(cascade = CascadeType.ALL)
     private PostSeason postSeason;
+
+    private Possession possession;
+
+    private Boolean tieBreaker = false;
 
     public boolean hasWinner() {
         return awayScore < GameSettings.GAME_POINTS_THRESHOLD && homeScore < GameSettings.GAME_POINTS_THRESHOLD;

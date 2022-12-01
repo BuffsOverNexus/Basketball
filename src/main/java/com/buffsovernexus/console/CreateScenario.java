@@ -26,22 +26,22 @@ public class CreateScenario {
         // Acquire Account
         Account account = session
                 .createQuery(
-                        String.format("FROM Account WHERE id='%s'", CurrentSession.account_id),
+                        String.format("FROM Account WHERE id='%s'", CurrentSession.accountId),
                         Account.class).uniqueResult();
         Scenario scenario = new Scenario();
         scenario.setScenarioStatus(ScenarioStatus.SETUP);
         scenario.setAccount(account);
         scenario.setName(name);
 
-        session.save(scenario);
-        CurrentSession.scenario_id = scenario.getId();
+        session.persist(scenario);
+        CurrentSession.scenarioId = scenario.getId();
 
         session.getTransaction().commit();
         session.close();
 
 
 
-        System.out.println( String.format("** SUCCESS ** Created New Scenario: %s", name.toUpperCase()) );
+        System.out.printf("** SUCCESS ** Created New Scenario: %s%n", name.toUpperCase());
         new ContinueScenario();
     }
 }

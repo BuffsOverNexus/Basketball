@@ -17,9 +17,9 @@ public class SeasonTeamGenerator {
         Session session = Database.sessionFactory.openSession();
         try {
             Transaction transaction = session.beginTransaction();
-            List<Team> teams = session.createQuery(String.format("FROM Team WHERE scenario_id = %s", CurrentSession.scenario_id), Team.class).list();
-            Scenario scenario = session.createQuery(String.format("FROM Scenario WHERE id='%s'", CurrentSession.scenario_id), Scenario.class).uniqueResult();
-            Season season = session.createQuery(String.format("FROM Season WHERE id='%s'", CurrentSession.season_id), Season.class).uniqueResult();
+            List<Team> teams = session.createQuery(String.format("FROM Team WHERE scenario = %s", CurrentSession.scenarioId), Team.class).list();
+            Scenario scenario = session.createQuery(String.format("FROM Scenario WHERE id='%s'", CurrentSession.scenarioId), Scenario.class).uniqueResult();
+            Season season = session.createQuery(String.format("FROM Season WHERE id='%s'", CurrentSession.seasonId), Season.class).uniqueResult();
 
             teams.forEach(team -> {
                SeasonTeam seasonTeam = new SeasonTeam();
@@ -28,7 +28,7 @@ public class SeasonTeamGenerator {
                seasonTeam.setSeason(season);
                seasonTeam.setWins(0);
                seasonTeam.setLosses(0);
-               session.saveOrUpdate(seasonTeam);
+               session.persist(seasonTeam);
             });
 
             transaction.commit();

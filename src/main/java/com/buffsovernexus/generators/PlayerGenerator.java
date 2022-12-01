@@ -10,14 +10,12 @@ import java.util.Random;
 
 public class PlayerGenerator {
 
-    public static Player generatePlayer(PlayerPosition position) {
-        return generatePlayer(randomFirstName(), randomLastName(), position);
+    public static Player generatePlayer(Session session, PlayerPosition position) {
+        return generatePlayer(session, randomFirstName(), randomLastName(), position);
     }
 
-    public static Player generatePlayer(String firstName, String lastName, PlayerPosition position) {
+    public static Player generatePlayer(Session session, String firstName, String lastName, PlayerPosition position) {
         Random random = new Random();
-
-        Session session = Database.sessionFactory.openSession();
         session.beginTransaction();
 
         Player player = new Player();
@@ -51,10 +49,9 @@ public class PlayerGenerator {
             player.setRebound(rebound);
         }
 
-        session.save(player);
-        session.update(player);
+        session.persist(player);
         session.getTransaction().commit();
-        session.close();
+        session.refresh(player);
         return player;
     }
 

@@ -19,7 +19,7 @@ public class GameWeights {
 
     // Guard - Steal Pass
     public final static int GUARD_PASS_WEIGHT = 60;
-    public final static int GUARD_STEAL_WEIGHT = 0;
+    public final static int GUARD_STEAL_WEIGHT = 20;
 
     // Guard - Rebound
     public final static int GUARD_REBOUND_WEIGHT = 60;

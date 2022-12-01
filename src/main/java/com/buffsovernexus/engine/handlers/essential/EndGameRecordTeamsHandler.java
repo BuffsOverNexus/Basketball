@@ -1,4 +1,4 @@
-package com.buffsovernexus.engine.handlers;
+package com.buffsovernexus.engine.handlers.essential;
 
 import com.buffsovernexus.CurrentSession;
 import com.buffsovernexus.database.Database;
@@ -16,10 +16,10 @@ public class EndGameRecordTeamsHandler extends EngineEventHandler {
             Session session = Database.sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
             SeasonTeam winningTeam = session.createQuery(
-                    String.format("FROM SeasonTeam WHERE scenario_id = '%s' and season_id='%s' and team_id = '%s'", CurrentSession.scenario_id, CurrentSession.season_id, event.getWinner().getId()),
+                    String.format("FROM SeasonTeam WHERE scenario = '%s' and season ='%s' and team = '%s'", CurrentSession.scenarioId, CurrentSession.seasonId, event.getWinner().getId()),
                     SeasonTeam.class).uniqueResult();
             SeasonTeam losingTeam = session.createQuery(
-                    String.format("FROM SeasonTeam WHERE scenario_id = '%s' and season_id='%s' and team_id = '%s'", CurrentSession.scenario_id, CurrentSession.season_id, event.getLoser().getId()),
+                    String.format("FROM SeasonTeam WHERE scenario = '%s' and season ='%s' and team = '%s'", CurrentSession.scenarioId, CurrentSession.seasonId, event.getLoser().getId()),
                     SeasonTeam.class).uniqueResult();
 
             winningTeam.setWins(winningTeam.getWins() + 1);

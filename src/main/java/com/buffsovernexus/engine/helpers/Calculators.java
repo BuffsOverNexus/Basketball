@@ -44,8 +44,8 @@ public class Calculators {
     public static boolean getForwardTwoPointer(Player forward, Player opposing) {
         try {
             Calculator calc = new Calculator();
-            calc.add(forward.getFourPointer(), GameWeights.GUARD_FOUR_POINTER_WEIGHT);
-            calc.add(opposing.getBlock(), GameWeights.GUARD_FOUR_BLOCK_WEIGHT, false);
+            calc.add(forward.getTwoPointer(), GameWeights.FORWARD_TWO_POINTER_WEIGHT);
+            calc.add(opposing.getBlock(), GameWeights.FORWARD_TWO_BLOCK_WEIGHT, false);
             return calc.result();
         } catch (Exception ex) {
             ex.printStackTrace();
