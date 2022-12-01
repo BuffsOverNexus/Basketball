@@ -27,10 +27,10 @@ import java.util.List;
 public class Engine {
 
     private Game game;
-    private Possession possession = Possession.HOME;
+    private Possession possession;
     private List<EngineListener> eventHandlers;
-    private boolean hasWinner = false;
-    private boolean logging = true;
+    private boolean hasWinner;
+    private boolean logging;
 
     private Session session;
 
@@ -65,7 +65,7 @@ public class Engine {
         startGame();
 
         // Ensure the game does not end while there has not been declared a winner.
-        while (!game.hasWinner()) {
+        while (game.hasWinner()) {
             // Start the possession
             startPossession();
 
@@ -85,7 +85,7 @@ public class Engine {
         // Declare start of the game
         GameStartEvent gameStartEvent = GameStartEvent.builder().game(game).startingPossession(possession)
                 .teamWithPossession( getOffense() ).build();
-        eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameStartEvent(gameStartEvent));
+        eventHandlers.forEach(eventHandler -> eventHandler.onGameStartEvent(gameStartEvent));
     }
 
     private void endGame() {
@@ -97,16 +97,16 @@ public class Engine {
             game.setWinner(game.getHome());
             game.setLoser(game.getAway());
         }
-        session.update(game);
+        session.persist(game);
         transaction.commit();
 
         // We are guaranteed to have a winner.
         if (game.getHomeScore() > game.getAwayScore()) {
             GameEndEvent gameEndEvent = GameEndEvent.builder().game(game).winner(game.getHome()).loser(game.getAway()).winningScore(game.getHomeScore()).losingScore(game.getAwayScore()).build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameEndEvent(gameEndEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onGameEndEvent(gameEndEvent));
         } else {
             GameEndEvent gameEndEvent = GameEndEvent.builder().game(game).winner(game.getAway()).loser(game.getAway()).winningScore(game.getAwayScore()).losingScore(game.getHomeScore()).build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameEndEvent(gameEndEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onGameEndEvent(gameEndEvent));
         }
     }
 
@@ -151,7 +151,7 @@ public class Engine {
                     .defender(opposing)
                     .reboundingTeam(getOffense())
                     .defendingTeam(getDefense()).build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerReboundEvent(playerReboundEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerReboundEvent(playerReboundEvent));
             forwardPhase();
         } else {
             PlayerReboundTurnoverEvent playerReboundTurnoverEvent = PlayerReboundTurnoverEvent.builder()
@@ -162,7 +162,7 @@ public class Engine {
                     .losingTeam(getOffense())
                     .winningTeam(getDefense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerReboundTurnoverEvent(playerReboundTurnoverEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerReboundTurnoverEvent(playerReboundTurnoverEvent));
         }
     }
 
@@ -175,7 +175,7 @@ public class Engine {
                     .defender(opposing)
                     .reboundingTeam(getOffense())
                     .defendingTeam(getDefense()).build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerReboundEvent(playerReboundEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerReboundEvent(playerReboundEvent));
             guardPhase();
         } else {
             PlayerReboundTurnoverEvent playerReboundTurnoverEvent = PlayerReboundTurnoverEvent.builder()
@@ -186,7 +186,7 @@ public class Engine {
                     .losingTeam(getOffense())
                     .winningTeam(getDefense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerReboundTurnoverEvent(playerReboundTurnoverEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerReboundTurnoverEvent(playerReboundTurnoverEvent));
         }
     }
 
@@ -203,7 +203,7 @@ public class Engine {
                     .defendingTeam(getDefense())
                     .receivingPlayer(getForward())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerPassEvent(playerPassEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerPassEvent(playerPassEvent));
             forwardPhase();
         } else {
             // This is going to assume they stole.
@@ -215,7 +215,7 @@ public class Engine {
                     .thiefTeam(getDefense())
                     .stolenFromTeam(getOffense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerStealEvent(playerStealEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerStealEvent(playerStealEvent));
         }
     }
 
@@ -232,7 +232,7 @@ public class Engine {
                     .defendingTeam(getDefense())
                     .receivingPlayer(getGuard())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerPassEvent(playerPassEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerPassEvent(playerPassEvent));
             guardPhase();
         } else {
             // This is going to assume they stole.
@@ -244,7 +244,7 @@ public class Engine {
                     .thiefTeam(getDefense())
                     .stolenFromTeam(getOffense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerStealEvent(playerStealEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerStealEvent(playerStealEvent));
         }
     }
 
@@ -261,7 +261,7 @@ public class Engine {
                     .shootingTeam(getOffense())
                     .defendingTeam(getDefense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
 
             // Determine if the player scored.
             if ( Calculators.getGuardFourPointer(guard, opposing) ) {
@@ -277,7 +277,7 @@ public class Engine {
                         .scoringTeam(getOffense())
                         .defendingTeam(getDefense())
                         .build();
-                eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
+                eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
             } else {
                 forwardReboundPhase();
             }
@@ -290,7 +290,7 @@ public class Engine {
                     .defendingTeam(getDefense())
                     .defender(opposing)
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
 
             if ( Calculators.getGuardTwoPointer(guard, opposing) ) {
                 // Update scores depending on who has possession
@@ -305,7 +305,7 @@ public class Engine {
                         .scoringTeam(getOffense())
                         .defendingTeam(getDefense())
                         .build();
-                eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
+                eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
 
             } else {
                 forwardReboundPhase();
@@ -325,7 +325,7 @@ public class Engine {
                     .shootingTeam(getOffense())
                     .defendingTeam(getDefense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
 
             if ( Calculators.getForwardFourPointer(forward, opposing) ) {
                 updateScore(PlayerShotType.FOUR_POINTER);
@@ -338,7 +338,7 @@ public class Engine {
                         .scoringTeam(getOffense())
                         .defendingTeam(getDefense())
                         .build();
-                eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
+                eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
             } else {
                 guardReboundPhase();
             }
@@ -352,7 +352,7 @@ public class Engine {
                     .shootingTeam(getOffense())
                     .defendingTeam(getDefense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotEvent(playerShotEvent));
 
             if ( Calculators.getForwardTwoPointer(forward, opposing) ) {
                 updateScore(PlayerShotType.TWO_POINTER);
@@ -365,7 +365,7 @@ public class Engine {
                         .defendingTeam(getDefense())
                         .defender(opposing)
                         .build();
-                eventHandlers.stream().forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
+                eventHandlers.forEach(eventHandler -> eventHandler.onPlayerShotScoredEvent(playerShotScoredEvent));
             } else {
                 guardReboundPhase();
             }
@@ -386,13 +386,13 @@ public class Engine {
                     .offense(getOffense())
                     .defense(getDefense())
                     .build();
-            eventHandlers.stream().forEach(eventHandler -> eventHandler.onGamePossessionChangeEvent(gamePossessionChangeEvent));
+            eventHandlers.forEach(eventHandler -> eventHandler.onGamePossessionChangeEvent(gamePossessionChangeEvent));
         }
     }
 
     /**
      * Return the Guard who has possession of the ball
-     * @return
+     * @return the guard with possession
      */
     private Player getGuard() {
         return possession == Possession.HOME ? game.getHome().getGuard() : game.getAway().getGuard();
@@ -400,7 +400,7 @@ public class Engine {
 
     /**
      * Return the Forward who has possession of the ball
-     * @return
+     * @return the forward with possession
      */
     private Player getForward() {
         return possession == Possession.HOME ? game.getHome().getForward() : game.getAway().getForward();
@@ -408,14 +408,14 @@ public class Engine {
 
     /**
      * Get the Guard who does not have possession of the ball
-     * @return
+     * @return the opposing guard
      */
     private Player getOpposingGuard() {
         return possession == Possession.AWAY ? game.getHome().getGuard() : game.getAway().getGuard();
     }
     /**
      * Get the Forward who does not have possession of the ball
-     * @return
+     * @return the opposing forward
      */
     private Player getOpposingForward() {
         return possession == Possession.AWAY ? game.getHome().getForward() : game.getAway().getForward();
@@ -423,7 +423,7 @@ public class Engine {
 
     /**
      * Determine if the home has the ball
-     * @return
+     * @return true if they have possession, false otherwise
      */
     private boolean doesHomeHavePossession() {
         return possession == Possession.HOME;
@@ -450,7 +450,7 @@ public class Engine {
     }
 
     private boolean isTied() {
-        return game.getHomeScore() == game.getAwayScore();
+        return game.getHomeScore().intValue() == game.getAwayScore().intValue();
     }
 
     private boolean isAwayLeading() {
@@ -474,7 +474,7 @@ public class Engine {
                             .homeScore(game.getHomeScore())
                             .difference(difference)
                             .build();
-                    eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
+                    eventHandlers.forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
                 }
             }
         }
@@ -491,7 +491,7 @@ public class Engine {
                         .homeScore(homeScore)
                         .difference(difference)
                         .build();
-                eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
+                eventHandlers.forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
             } else {
                 int awayScore = game.getAwayScore() + playerShotType.getPoints();
                 int difference = playerShotType.getPoints();
@@ -503,7 +503,7 @@ public class Engine {
                         .homeScore(game.getHomeScore())
                         .difference(difference)
                         .build();
-                eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
+                eventHandlers.forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
             }
         }
 
@@ -520,7 +520,7 @@ public class Engine {
                             .homeScore(homeScore)
                             .difference(difference)
                             .build();
-                    eventHandlers.stream().forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
+                    eventHandlers.forEach(eventHandler -> eventHandler.onGameLeadChangeEvent(gameLeadChangeEvent));
                 }
             }
         }
@@ -531,14 +531,12 @@ public class Engine {
         } else {
             game.addAwayScore(playerShotType.getPoints());
         }
-        session.update(game);
+        session.persist(game);
         transaction.commit();
     }
 
     private boolean hasWinner() {
-        if (game.getAwayScore() >= GameSettings.GAME_POINTS_THRESHOLD) return true;
-        if (game.getHomeScore() >= GameSettings.GAME_POINTS_THRESHOLD) return true;
-        return false;
+        return game.getAwayScore() >= GameSettings.GAME_POINTS_THRESHOLD || game.getHomeScore() >= GameSettings.GAME_POINTS_THRESHOLD;
     }
 
 
