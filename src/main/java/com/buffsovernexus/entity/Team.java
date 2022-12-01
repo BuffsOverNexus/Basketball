@@ -3,7 +3,7 @@ package com.buffsovernexus.entity;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class Team {
     public boolean equals(Object object) {
         try {
             Team team = (Team) object;
-            return team.getId() == id;
+            return team.getId().intValue() == id;
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;

@@ -25,8 +25,8 @@ public class EndGameRecordTeamsHandler extends EngineEventHandler {
             winningTeam.setWins(winningTeam.getWins() + 1);
             losingTeam.setLosses(losingTeam.getLosses() + 1);
 
-            session.update(winningTeam);
-            session.update(losingTeam);
+            session.persist(winningTeam);
+            session.persist(losingTeam);
             transaction.commit();
             session.close();
         } catch (Exception ex) {

@@ -1,10 +1,10 @@
 package com.buffsovernexus.entity;
 
 import com.buffsovernexus.GameSettings;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 
 @Data
 @Entity
@@ -34,9 +34,7 @@ public class Game {
     private PostSeason postSeason;
 
     public boolean hasWinner() {
-        if (awayScore >= GameSettings.GAME_POINTS_THRESHOLD) return true;
-        if (homeScore >= GameSettings.GAME_POINTS_THRESHOLD) return true;
-        return false;
+        return awayScore < GameSettings.GAME_POINTS_THRESHOLD && homeScore < GameSettings.GAME_POINTS_THRESHOLD;
     }
 
     public boolean isSeason() {
