@@ -17,7 +17,7 @@ public class GenerateScenarioMenu {
         Session session = Database.sessionFactory.openSession();
         session.beginTransaction();
 
-        Scenario scenario = session.get(Scenario.class, CurrentSession.scenario_id);
+        Scenario scenario = session.get(Scenario.class, CurrentSession.scenarioId);
         String scenarioName = scenario.getName();
 
         session.getTransaction().commit();
@@ -30,13 +30,13 @@ public class GenerateScenarioMenu {
         // Generate the number of teams based on the config.
         // TODO: Add more team names to handle more teams in the future.
         for (int i = 0; i < GameSettings.TOTAL_TEAMS - 1; i++) {
-            System.out.println( String.format("Generating Team: %s", teamNames[i]) );
+            System.out.printf("Generating Team: %s", teamNames[i]);
             TeamGenerator.generateTeam(teamNames[i], false);
         }
         // Generate the user's team.
         Team userTeam = TeamGenerator.generateTeam(scenarioName, true);
         // Alert user their team has been generated
-        System.out.println( String.format("Generating Team: %s", userTeam.getName()) );
+        System.out.printf("Generating Team: %s", userTeam.getName());
 
         session.beginTransaction();
 
@@ -44,19 +44,19 @@ public class GenerateScenarioMenu {
         Season season = new Season();
         season.setYear(1); // Always will be the first year when you start a season.
         season.setScenario(scenario);
-        session.save(season);
+        session.persist(season);
 
         session.getTransaction().commit();
 
 
         // Start new transaction
         session.beginTransaction();
-        session.update(season);
+        session.refresh(season);
 
         // Bug - Make sure to update season_id
-        CurrentSession.season_id = season.getId();
+        CurrentSession.seasonId = season.getId();
         scenario.setScenarioStatus(ScenarioStatus.SEASON);
-        session.save(scenario);
+        session.persist(scenario);
 
         session.getTransaction().commit();
         session.close();

@@ -7,8 +7,10 @@ import com.buffsovernexus.entity.Account;
 import org.hibernate.Session;
 
 public class LoginMenu {
-    private boolean isValidLogin = false;
     public LoginMenu() {
+        // Ensure login is valid before continuing.
+        boolean isValidLogin = false;
+
         System.out.println();
         System.out.println(">> ACCESS YOUR ACCOUNT");
         System.out.println();
@@ -26,8 +28,8 @@ public class LoginMenu {
 
             if (account != null) {
                 isValidLogin = true;
-                System.out.println( String.format("Welcome back, %s!", account.getUsername()) );
-                CurrentSession.account_id = account.getId();
+                System.out.printf("Welcome back, %s!", account.getUsername());
+                CurrentSession.accountId = account.getId();
                 new ChooseScenario();
             } else {
                 System.out.println();
